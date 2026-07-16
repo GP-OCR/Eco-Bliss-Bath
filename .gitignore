@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Cypress (artefacts locaux)
+cypress/screenshots/
+cypress/videos/
+cypress/results/
+cypress/reports/
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
+
+# Env
+.env
+.env.*
+
+# Données locales hors dépôt
+mysql/

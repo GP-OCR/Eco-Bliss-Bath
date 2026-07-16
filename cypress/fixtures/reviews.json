@@ -1,0 +1,12 @@
+{
+  "valid": {
+    "title": "Test automatisé",
+    "comment": "Avis créé par Cypress",
+    "rating": 4
+  },
+  "xss": {
+    "title": "Test XSS",
+    "comment": "<script>console.log(\"XSS avis\")</script>",
+    "rating": 3
+  }
+}

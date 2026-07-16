@@ -1,0 +1,12 @@
+{
+  "inStock": {
+    "id": 5,
+    "name": "Poussière de lune",
+    "quantity": 1
+  },
+  "outOfStock": {
+    "id": 4,
+    "name": "Chuchotements d'été",
+    "quantity": 1
+  }
+}
