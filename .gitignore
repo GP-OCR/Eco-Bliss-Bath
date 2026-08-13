@@ -1,0 +1,23 @@
+# Dependances
+node_modules/
+
+# Volume MariaDB cree par docker compose
+mysql/
+
+# Artefacts Cypress
+cypress/reports/
+cypress/videos/
+cypress/screenshots/
+
+# Systeme et editeurs
+.DS_Store
+*.log
+.idea/
+.vscode/
+
+# Outils locaux
+.claude/
+.grok/
+
+# Doublon d'extraction (non versionne)
+frontend/frontend/

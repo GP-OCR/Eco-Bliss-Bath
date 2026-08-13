@@ -1,0 +1,22 @@
+{
+  "name": "eco-bliss-bath-tests",
+  "version": "2.1.0",
+  "private": true,
+  "description": "Tests Cypress pour Eco Bliss Bath (Projet 10 OpenClassrooms)",
+  "scripts": {
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "test:regression": "cypress run --spec \"cypress/api/**/*.cy.js,cypress/e2e/**/*.cy.js,cypress/smoke-test/**/*.cy.js\"",
+    "test:anomalies": "cypress run --spec \"cypress/anomalies/**/*.cy.js\"",
+    "report:clean": "rm -rf cypress/reports",
+    "report:merge": "mochawesome-merge \"cypress/reports/json/*.json\" > cypress/reports/index.json",
+    "report:html": "marge cypress/reports/index.json --reportDir cypress/reports --reportFilename index --inline",
+    "test": "npm run report:clean; cypress run; npm run report:merge && npm run report:html"
+  },
+  "devDependencies": {
+    "cypress": "^15.18.0",
+    "mochawesome": "^7.1.4",
+    "mochawesome-merge": "^5.0.0",
+    "mochawesome-report-generator": "^6.2.0"
+  }
+}

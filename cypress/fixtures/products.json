@@ -1,0 +1,15 @@
+{
+  "rupture": {
+    "id": 4,
+    "name": "Chuchotements d'ete",
+    "commentaire": "Produit dont le stock initial est a 0 (jeu de donnees de reference)."
+  },
+  "stockNegatif": {
+    "id": 3,
+    "name": "Sentiments printaniers",
+    "commentaire": "Produit dont le stock initial est negatif (jeu de donnees de reference)."
+  },
+  "inexistant": {
+    "id": 99999
+  }
+}

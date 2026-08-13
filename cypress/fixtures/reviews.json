@@ -1,0 +1,17 @@
+{
+  "valid": {
+    "title": "Test automatise",
+    "comment": "Avis cree par Cypress",
+    "rating": 4
+  },
+  "xssScript": {
+    "title": "XSS script",
+    "comment": "<script>window.XSS_EXECUTED = true</script>",
+    "rating": 3
+  },
+  "xssHtml": {
+    "title": "XSS injection HTML",
+    "comment": "<b>injection HTML</b>",
+    "rating": 3
+  }
+}
