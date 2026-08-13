@@ -15,9 +15,5 @@ cypress/screenshots/
 .idea/
 .vscode/
 
-# Outils locaux
-.claude/
-.grok/
-
 # Doublon d'extraction (non versionne)
 frontend/frontend/
