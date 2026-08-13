@@ -1,6 +1,6 @@
 <div align="center">
 
-# OpenClassrooms - Eco Bliss Bath
+# Eco Bliss Bath
 
 </div>
 
