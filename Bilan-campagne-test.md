@@ -165,10 +165,10 @@ Accueil et navigation complète, liste des produits, page des avis, formulaire d
 |------------|--------|
 | Tests exécutés | 35 |
 | Suite de régression | 24 réussis, 0 en échec |
-| Suite d'anomalies | 0 réussi, 11 en échec |
+| Suite d'anomalies | 1 réussi, 10 en échec |
 | Anomalies distinctes | 6 |
 
-La suite de régression est verte : le parcours nominal fonctionne et la campagne est rejouable. Les 11 échecs de la suite d'anomalies ne sont pas des défauts de test mais des écarts de l'application, tous reproductibles en requête directe.
+La suite de régression est verte : le parcours nominal fonctionne et la campagne est rejouable. Les 10 échecs de la suite d'anomalies ne sont pas des défauts de test mais des écarts de l'application, tous reproductibles en requête directe. Le test vert de cette suite (`anomalie-2`, quantité négative) confirme que le back-end refuse déjà une quantité négative : cette règle est respectée et sert de test de non-régression.
 
 ---
 
@@ -182,11 +182,11 @@ La suite de régression est verte : le parcours nominal fonctionne et la campagn
 - **Impact** : survente, commandes impossibles à honorer, litiges clients.
 - **Correction** : comparer `quantity` et `availableStock` avant création de la ligne.
 
-### BUG-02 : Quantité nulle ou négative acceptée
+### BUG-02 : Quantité nulle acceptée
 
 - **Criticité** : mineure. **Niveau** : back-end
-- **Reproduction** : `PUT /orders/add` avec `quantity: 0`, puis `quantity: -1`.
-- **Attendu** : refus 4xx. **Obtenu** : 200.
+- **Reproduction** : `PUT /orders/add` avec `quantity: 0`.
+- **Attendu** : refus 4xx. **Obtenu** : 200. La quantité négative (`quantity: -1`), elle, est déjà refusée par le back-end (400) : ce cas est conforme et couvert par un test vert.
 - **Impact** : lignes de panier parasites, totaux incohérents.
 - **Correction** : n'accepter qu'une quantité entière supérieure ou égale à 1. Le front applique `Validators.min(0)` : il faut également passer à 1.
 
