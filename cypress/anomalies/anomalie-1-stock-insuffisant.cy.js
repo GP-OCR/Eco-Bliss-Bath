@@ -66,6 +66,9 @@ describe('Anomalie 1 - controle du stock a l\'ajout au panier', () => {
 
       cy.intercept('PUT', '**/orders/add').as('ajoutPanier');
       cy.visit(`/#/products/${produit.id}`);
+      // On attend que le produit soit charge avant d'agir, sinon le clic part
+      // dans le vide et le test echoue sans envoyer la requete (fausse raison).
+      cy.get('[data-cy="detail-product-name"]').should('contain', produit.name);
       cy.get('[data-cy="detail-product-quantity"]').clear().type('21');
       cy.get('[data-cy="detail-product-add"]').click();
 

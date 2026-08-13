@@ -35,6 +35,9 @@ describe('Fonctionnel - Panier', () => {
     cy.produitDisponible(1).then((produit) => {
       cy.intercept('PUT', '**/orders/add').as('ajoutPanier');
       cy.visit(`/#/products/${produit.id}`);
+      // On attend que le produit soit charge : sinon l'absence de requete
+      // pourrait venir d'un clic premature et non de la validation du formulaire.
+      cy.get('[data-cy="detail-product-name"]').should('contain', produit.name);
       cy.get('[data-cy="detail-product-quantity"]').clear().type('-1');
       cy.get('[data-cy="detail-product-add"]').click();
 
@@ -49,8 +52,14 @@ describe('Fonctionnel - Panier', () => {
   it('supprime une ligne du panier', () => {
     cy.setAuthToken();
     cy.produitDisponible(1).then((produit) => {
+      cy.intercept('PUT', '**/orders/add').as('ajoutPanier');
       cy.visit(`/#/products/${produit.id}`);
+      // On attend que le produit soit charge avant de cliquer, sinon le clic
+      // part avant que le formulaire soit pret et aucune requete n'est envoyee.
+      cy.get('[data-cy="detail-product-name"]').should('contain', produit.name);
+      cy.get('[data-cy="detail-product-stock"]').should('be.visible');
       cy.get('[data-cy="detail-product-add"]').click();
+      cy.wait('@ajoutPanier');
       cy.url().should('include', '/cart');
       cy.get('[data-cy="cart-line"]').should('have.length.at.least', 1);
 

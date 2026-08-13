@@ -1,4 +1,4 @@
-# Bilan de campagne de test — Eco Bliss Bath
+# Bilan de campagne de test : Eco Bliss Bath
 
 | Nom | Fonction | Version | Date | Signature |
 |-----|----------|---------|------|-----------|
@@ -119,9 +119,9 @@ Objectifs secondaires :
 
 Ce découpage est un choix de méthode. Un test d'anomalie qui asserterait le comportement buggé (par exemple `expect(status).to.eq(200)` là où un refus est attendu) verrouillerait le défaut et deviendrait rouge le jour de sa correction. Les tests d'anomalie assertent donc la règle attendue et servent, après correctif, de tests de non-régression.
 
-Les données d'authentification sont centralisées dans des fixtures. Les actions communes sont regroupées dans des commandes personnalisées : `loginApi`, `authRequest`, `loginUi`, `setAuthToken`, `creerUtilisateur`, `viderPanier`, `reinitialiserPanier`, `produitDisponible`. Aucun `cy.wait()` fixe : la synchronisation repose sur la retry-ability de `cy.get`/`should`, sur `cy.request` et sur les alias de route. Les contrôles qui suivent un clic portent sur la requête interceptée et non sur l'URL, une assertion négative sur l'URL étant vraie avant même que la navigation ait pu se produire. Les URL de l'API sont lues dans `Cypress.env('apiUrl')`.
+Les données d'authentification sont centralisées dans des fixtures. Les actions communes sont regroupées dans des commandes personnalisées : `loginApi`, `authRequest`, `loginUi`, `setAuthToken`, `creerUtilisateur`, `viderPanier`, `reinitialiserPanier`, `produitDisponible`. Aucun `cy.wait()` fixe : la synchronisation repose sur la retry-ability de `cy.get`/`should`, sur `cy.request` et sur les alias de route. Sur une fiche produit, chaque interaction (saisie de quantité, clic sur « ajouter ») est précédée de l'attente du chargement du produit (`detail-product-name`) : sans elle, sur une machine lente, le clic partait avant l'initialisation du formulaire et aucune requête n'était émise, et le test échouait alors sans défaut applicatif. Cette attente garantit un résultat identique quelle que soit la vitesse de la machine, y compris pour l'évaluateur. Les contrôles qui suivent un clic portent sur la requête interceptée et non sur l'URL, une assertion négative sur l'URL étant vraie avant même que la navigation ait pu se produire. Les URL de l'API sont lues dans `Cypress.env('apiUrl')`.
 
-#### 1. Tests API — les 6 requêtes de Marie
+#### 1. Tests API : les 6 requêtes de Marie
 
 | Fichier | Requête | Attendu |
 |---------|---------|---------|
@@ -174,51 +174,51 @@ La suite de régression est verte : le parcours nominal fonctionne et la campagn
 
 ## III. Rapports d'incident
 
-### BUG-01 — Aucun contrôle de stock à l'ajout au panier
+### BUG-01 : Aucun contrôle de stock à l'ajout au panier
 
-- **Criticité** : majeure — **Niveau** : back-end
+- **Criticité** : majeure. **Niveau** : back-end
 - **Reproduction** : `PUT /orders/add` avec une quantité supérieure à `availableStock`, avec une quantité de 21 sur un produit dont le stock est inférieur (cas limite du bilan de Marie), ou avec un produit dont le stock est à 0 (produit 4).
 - **Attendu** : refus 4xx. **Obtenu** : 200, ligne de panier créée.
 - **Impact** : survente, commandes impossibles à honorer, litiges clients.
 - **Correction** : comparer `quantity` et `availableStock` avant création de la ligne.
 
-### BUG-02 — Quantité nulle ou négative acceptée
+### BUG-02 : Quantité nulle ou négative acceptée
 
-- **Criticité** : mineure — **Niveau** : back-end
+- **Criticité** : mineure. **Niveau** : back-end
 - **Reproduction** : `PUT /orders/add` avec `quantity: 0`, puis `quantity: -1`.
 - **Attendu** : refus 4xx. **Obtenu** : 200.
 - **Impact** : lignes de panier parasites, totaux incohérents.
 - **Correction** : n'accepter qu'une quantité entière supérieure ou égale à 1. Le front applique `Validators.min(0)` : il faut également passer à 1.
 
-### BUG-03 — Commande validée avec un panier vide
+### BUG-03 : Commande validée avec un panier vide
 
-- **Criticité** : majeure — **Niveau** : back-end
+- **Criticité** : majeure. **Niveau** : back-end
 - **Reproduction** : créer un panier, le vider, puis `POST /orders` avec une adresse valide.
 - **Attendu** : refus 4xx. **Obtenu** : 200 et `validated: true`.
 - **Impact** : commandes fantômes, incohérence comptable et logistique.
 - **Correction** : refuser la validation si le panier ne contient aucune ligne.
 
-### BUG-04 — `GET /orders` renvoie 404 pour un panier jamais créé
+### BUG-04 : `GET /orders` renvoie 404 pour un panier jamais créé
 
-- **Criticité** : faible — **Niveau** : back-end
+- **Criticité** : faible. **Niveau** : back-end
 - **Reproduction** : créer un compte, appeler `GET /orders` sans avoir rien ajouté.
 - **Attendu** : 200 et `orderLines: []`. **Obtenu** : 404.
 - **Impact** : incohérence REST, le front doit traiter une erreur pour un cas nominal.
 - **Correction** : distinguer panier inexistant et panier vide.
 
-### BUG-05 — Produits à stock négatif exposés au catalogue
+### BUG-05 : Produits à stock négatif exposés au catalogue
 
-- **Criticité** : majeure — **Niveau** : back-end et données
+- **Criticité** : majeure. **Niveau** : back-end et données
 - **Reproduction** : `GET /products`, le produit 3 « Sentiments printaniers » remonte un `availableStock` négatif.
 - **Attendu** : aucun stock inférieur à 0. **Obtenu** : valeur négative affichée sur la fiche produit.
 - **Impact** : conséquence directe de BUG-01. Affichage incohérent pour le client.
 - **Correction** : borner le stock à 0 et corriger les données existantes après correction de BUG-01.
 
-### BUG-06 — Commentaires d'avis stockés et rendus sans échappement
+### BUG-06 : Commentaires d'avis stockés et rendus sans échappement
 
-- **Criticité** : majeure — **Niveau** : back-end et front-end
+- **Criticité** : majeure. **Niveau** : back-end et front-end
 - **Reproduction** : `POST /reviews` avec un commentaire contenant du HTML, puis `GET /reviews` ; consulter ensuite `/#/reviews`.
-- **Attendu** : contenu rejeté ou échappé, affichage en texte. **Obtenu** : payload stockée brute côté API, et interprétée côté front — le composant avis rend le commentaire avec `[innerHTML]`, donc les balises sont injectées dans le DOM.
+- **Attendu** : contenu rejeté ou échappé, affichage en texte. **Obtenu** : payload stockée brute côté API, et interprétée côté front : le composant avis rend le commentaire avec `[innerHTML]`, donc les balises sont injectées dans le DOM.
 - **Nuance** : l'exécution de JavaScript est bloquée. Le sanitizer d'Angular retire les balises `script` du rendu `[innerHTML]`. L'injection HTML, elle, est bien effective.
 - **Impact** : défiguration de la page avis, hameçonnage par lien ou contenu injecté. Le risque d'exécution repose entièrement sur une protection du framework, sans aucun contrôle applicatif : toute évolution du rendu rouvre la faille.
 - **Correction** : échapper le contenu côté back-end à l'enregistrement, et remplacer `[innerHTML]` par une interpolation côté front. Les deux, en défense en profondeur.

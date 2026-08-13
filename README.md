@@ -155,10 +155,10 @@ Selon les consignes de Fabio (CTO) :
 
 ## Deux suites, deux rôles
 
-**Suite de régression** (`api/`, `e2e/`, `smoke-test/`) — 24 tests. Elle décrit le
+**Suite de régression** (`api/`, `e2e/`, `smoke-test/`), 24 tests. Elle décrit le
 comportement attendu et actuellement conforme. Un échec signale une régression.
 
-**Suite d'anomalies** (`anomalies/`) — 11 tests. Chaque test asserte la règle métier
+**Suite d'anomalies** (`anomalies/`), 11 tests. Chaque test asserte la règle métier
 correcte ; son échec est la preuve reproductible du défaut. Ces tests repasseront au
 vert quand les correctifs seront livrés, ce qui en fait aussi les tests de
 non-régression des correctifs.
@@ -177,7 +177,7 @@ le bug et deviendrait rouge le jour de sa correction.
 | `api-5-orders-add-disponible` | `PUT /orders/add` | Ajout d'un produit en stock |
 | `api-6-post-reviews` | `POST /reviews` | Publication d'un avis |
 
-La 7e requête du bilan de Marie — ajout d'un produit en rupture de stock — est traitée
+La 7e requête du bilan de Marie (ajout d'un produit en rupture de stock) est traitée
 dans `anomalies/anomalie-1-stock-insuffisant.cy.js` : le comportement attendu est un
 refus, l'application accepte.
 
@@ -216,6 +216,11 @@ la suite non rejouable.
 - Sélection par attributs `data-cy` uniquement, jamais par texte ou par classe CSS.
 - Aucun `cy.wait()` sur un délai fixe : la synchronisation repose sur la retry-ability
   de `cy.get`/`should`, sur `cy.request` et sur les alias de route (`cy.intercept`).
+- Sur une fiche produit, on attend que le produit soit chargé (`detail-product-name`
+  visible) avant de saisir une quantité ou de cliquer. Sans cette attente, le clic
+  peut partir avant l'initialisation du formulaire : aucune requête n'est émise et le
+  test échoue sur une machine lente sans que l'application soit en cause. Cette attente
+  rend le résultat identique quelle que soit la vitesse de la machine.
 - Une assertion négative sur l'URL après un clic n'est jamais utilisée : elle serait
   vraie avant même que la navigation ait pu se produire. Le contrôle porte sur la
   requête interceptée.
