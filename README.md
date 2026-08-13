@@ -14,7 +14,7 @@
 
 # Contexte
 
-Projet 10 — automatisation des tests de la boutique en ligne **Eco Bliss Bath**.
+Automatisation des tests de la boutique en ligne **Eco Bliss Bath**.
 
 Ce dépôt est la copie du projet fournie par OpenClassrooms, à laquelle sont ajoutés
 les tests automatisés. Ils sont écrits en **JavaScript** avec **Cypress** et couvrent
