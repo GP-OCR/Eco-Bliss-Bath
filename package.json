@@ -14,7 +14,7 @@
     "test": "npm run report:clean; cypress run; npm run report:merge && npm run report:html"
   },
   "devDependencies": {
-    "cypress": "^15.18.0",
+    "cypress": "^15.20.1",
     "mochawesome": "^7.1.4",
     "mochawesome-merge": "^5.0.0",
     "mochawesome-report-generator": "^6.2.0"

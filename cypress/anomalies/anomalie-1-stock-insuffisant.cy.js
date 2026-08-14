@@ -14,13 +14,16 @@ describe('Anomalie 1 - controle du stock a l\'ajout au panier', () => {
   });
 
   it('doit refuser un produit en rupture de stock', () => {
-    cy.fixture('products').then((products) => {
-      cy.request('GET', `${API}/products/${products.rupture.id}`).then((res) => {
-        expect(res.body.availableStock, 'produit bien en rupture').to.eq(0);
-      });
+    // On cherche un produit vraiment en rupture (stock <= 0) au moment du test
+    // au lieu de figer un id : le stock change d'une campagne a l'autre, donc
+    // un id code en dur finit par ne plus etre a zero (le test echouerait alors
+    // sur sa precondition et non sur la regle metier).
+    cy.request('GET', `${API}/products`).then((res) => {
+      const produit = res.body.find((p) => p.availableStock <= 0);
+      expect(produit, 'un produit en rupture existe dans le catalogue').to.exist;
 
       cy.authRequest('PUT', '/orders/add', {
-        body: { product: products.rupture.id, quantity: 1 },
+        body: { product: produit.id, quantity: 1 },
         failOnStatusCode: false,
       }).then((response) => {
         expect(response.status, 'refus attendu (4xx)').to.be.within(400, 499);

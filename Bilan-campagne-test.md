@@ -2,7 +2,7 @@
 
 | Nom | Fonction | Version | Date | Signature |
 |-----|----------|---------|------|-----------|
-| Gaëtan Pruvot | QA Engineer | 3.1 | 13 août 2026 | |
+| Gaëtan Pruvot | QA Engineer | 3.2 | 14 août 2026 | |
 
 ---
 
@@ -177,7 +177,7 @@ La suite de régression est verte : le parcours nominal fonctionne et la campagn
 ### BUG-01 : Aucun contrôle de stock à l'ajout au panier
 
 - **Criticité** : majeure. **Niveau** : back-end
-- **Reproduction** : `PUT /orders/add` avec une quantité supérieure à `availableStock`, avec une quantité de 21 sur un produit dont le stock est inférieur (cas limite du bilan de Marie), ou avec un produit dont le stock est à 0 (produit 4).
+- **Reproduction** : `PUT /orders/add` avec une quantité supérieure à `availableStock`, avec une quantité de 21 sur un produit dont le stock est inférieur (cas limite du bilan de Marie), ou avec un produit en rupture. Le produit en rupture est sélectionné dynamiquement (premier produit dont le stock est inférieur ou égal à 0) plutôt que par un identifiant figé, afin que le test reste fiable d'une campagne à l'autre quand le stock a déjà été consommé.
 - **Attendu** : refus 4xx. **Obtenu** : 200, ligne de panier créée.
 - **Impact** : survente, commandes impossibles à honorer, litiges clients.
 - **Correction** : comparer `quantity` et `availableStock` avant création de la ligne.
