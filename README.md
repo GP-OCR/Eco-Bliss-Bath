@@ -16,7 +16,7 @@
 
 Automatisation des tests de la boutique en ligne **Eco Bliss Bath**.
 
-Ce dépôt est la copie du projet fournie par OpenClassrooms, à laquelle sont ajoutés
+Ce dépôt est la copie du projet fournie par le CTO Fabio, à laquelle sont ajoutés
 les tests automatisés. Ils sont écrits en **JavaScript** avec **Cypress** et couvrent
 l'API, les smoke tests, la faille XSS et deux scénarios fonctionnels (connexion et panier).
 
